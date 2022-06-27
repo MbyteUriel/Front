@@ -1,9 +1,9 @@
 <script setup>
-import TheWelcome from '@/components/TheWelcome.vue'
+import { RouterLink, RouterView } from 'vue-router'
+import TitlePage from '@/components/TitlePage.vue'
+
 </script>
 
 <template>
-  <main>
-    <TheWelcome />
-  </main>
+  <TitlePage title="Categorias de productos"/>
 </template>

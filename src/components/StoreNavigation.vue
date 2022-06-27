@@ -83,6 +83,7 @@ export default {
                 </div>
               </div>
 
+
               <div class="border-t border-gray-200 py-6 px-4">
                 <a href="#" class="-m-2 p-2 flex items-center">
                   <img src="https://tailwindui.com/img/flags/flag-canada.svg" alt="" class="w-5 h-auto block flex-shrink-0" />
