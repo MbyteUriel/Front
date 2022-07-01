@@ -2,18 +2,12 @@
 import { RouterLink, RouterView } from 'vue-router'
 import StoreNavigation from '@/components/StoreNavigation.vue'
 
+
 </script>
 
 <template>
   <StoreNavigation />
   <header>
-    <div class="wrapper">
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">Carrito</RouterLink>
-        <RouterLink to="/login">Iniciar sesión</RouterLink>
-      </nav>
-    </div>
   </header>
   <RouterView />
 </template>
