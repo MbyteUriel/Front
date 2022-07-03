@@ -1,89 +1,50 @@
 <template>
-  <v-app id="inspire">
-    <v-main>
-      <v-container fluid fill-height>
-        <v-layout align-center justify-center>
-          <v-flex xs12 sm8 md4>
-            <v-card class="elevation-12">
-              <v-toolbar dark color="primary">
-                <v-toolbar-title>Bienvenido/a</v-toolbar-title>
-              </v-toolbar>
-              <v-card-text>
-                <v-form>
-                  <v-text-field
-                      v-model="user"
-                      prepend-icon="person"
-                      name="login"
-                      label="Login"
-                      type="text"
-                      :rules="[rules.required, rules.email]"
-                  ></v-text-field>
-                  <v-text-field
-                      v-model="pass"
-                      id="password"
-                      prepend-icon="lock"
-                      name="password"
-                      label="Password"
-                      type="password"
-                      counter
-                      minlength="6"
-                      :rules="[rules.required, rules.counter]"
-                  ></v-text-field>
-                </v-form>
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="success" to="/register">Registrarse</v-btn>
-                <v-btn color="primary" @click="login">Ingresar</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-flex>
-        </v-layout>
-      </v-container>
-    </v-main>
-  </v-app>
+  <div class="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+      <div>
+        <img class="mx-auto h-28 w-auto" src="src/assets/logo_negro.png" alt="Workflow" />
+        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Inicia sesión con tu cuenta</h2>
+        <p class="mt-2 text-center text-sm text-gray-600">
+          {{ ' ' }}
+        </p>
+      </div>
+      <form class="mt-8 space-y-6" action="#" method="POST">
+        <input type="hidden" name="remember" value="true" />
+        <div class="rounded-md shadow-sm -space-y-px">
+          <div>
+            <label for="email-address" class="sr-only">Correo</label>
+            <input id="email-address" name="email" type="email" autocomplete="email" required="" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Correo" />
+          </div>
+          <div>
+            <label for="password" class="sr-only">Contraseña</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" required="" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Contraseña" />
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" />
+            <label for="remember-me" class="ml-2 block text-sm text-gray-900"> Recordarme </label>
+          </div>
+
+          <div class="text-sm">
+            <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500"> ¿Olvidaste tu contraseña? </a>
+          </div>
+        </div>
+
+        <div>
+          <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+              <LockClosedIcon class="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" aria-hidden="true" />
+            </span>
+            Iniciar sesión
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 </template>
 
-<script>
-
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
-export default {
-  name: 'Login',
-  data() {
-    return {
-      user: '',
-      pass: '',
-      rules: {
-        required: value => !!value || 'Required.',
-        counter: value => value.length >= 6 || 'Min 6 characters',
-        email: value => {
-          const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-          return pattern.test(value) || 'Invalid e-mail.'
-        },
-      },
-    }
-  },
-  methods: {
-    login() {
-      if (!this.user =='' && !this.pass =='') {
-        const auth = getAuth()
-        signInWithEmailAndPassword(auth, this.user, this.pass)
-            .then((userCredential) => {
-              const user = userCredential.user
-              this.$router.push('/')
-            })
-            .catch((error) => {
-              if (error.code === 'auth/user-not-found') {
-                alert('Usuario no encontrado')
-              } else if (error.code === 'auth/wrong-password') {
-                alert('Contraseña incorrecta')
-              }
-            })
-      }
-    },
-  },
-}
-
+<script setup>
+import { LockClosedIcon } from '@heroicons/vue/solid'
 </script>
-
-<style></style>
