@@ -30,8 +30,8 @@ const router = createRouter({
       component: ()=> import('../views/ContactView.vue')
     },
     {
-      path: '/detailproduct',
-      name: 'productDetail',
+      path: '/product-details/:id',
+      name: 'product-details',
       component: () => import('../views/ProductDetailsView.vue')
     },
     {

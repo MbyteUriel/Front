@@ -1,5 +1,4 @@
 <script setup>
-import ProdQuant from "./ProdQuant.vue";
 
 defineProps({
   prod: {
@@ -16,21 +15,21 @@ defineProps({
 <template>
   <div class="prod-card">
     <div class="img-container">
-      <img :src="prod.image" alt="prod-img" />
+      <img :src="prod.imagen" alt="prod-img" />
     </div>
 
-    <h3>{{ prod.title }}</h3>
+    <h3>{{ prod.descripcion }}</h3>
 
-    <p class="prod-cat">{{ prod.category }}</p>
+    <p class="prod-cat">{{ prod.categoria }}</p>
 
-    <h3 class="prod-price">${{ prod.price }}</h3>
+    <h3 class="prod-price">${{ prod.precio }}</h3>
 
     <ProdQuant v-if="cartView" :prod="prod" />
 
     <RouterLink
         v-if="!cartView"
         class="see-prod-btn"
-        :to="{ name: 'product-details', params: { id: prod.id } }"
+        :to="{ name: 'product-details', params: { id: prod.clave } }"
     >
       See
     </RouterLink>
