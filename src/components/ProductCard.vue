@@ -31,7 +31,7 @@ defineProps({
         class="see-prod-btn"
         :to="{ name: 'product-details', params: { id: prod.clave } }"
     >
-      See
+      Ver producto
     </RouterLink>
   </div>
 </template>

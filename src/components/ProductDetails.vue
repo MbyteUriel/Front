@@ -14,7 +14,7 @@ const state = reactive({ isInCart: false });
 
 function addToMyCart(prodObj) {
   const prodInCart = cartStore.cart.find(
-    (product) => product.id === prodObj.id
+    (product) => product.clave === prodObj.id
   );
 
   if (!prodInCart) {

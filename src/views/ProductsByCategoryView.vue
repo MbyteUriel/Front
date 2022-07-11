@@ -32,7 +32,7 @@ export default {
       this.loadingCat = false;
     },
     async getAllProds() {
-      await fetch("http://localhost:8084/rest/getProducts/?categoria=MONITORES")
+      await fetch("http://localhost:8084/rest/getProducts/?categoria=PORTATILES")
         .then((res) => res.json())
         .then((list) => (this.prodList = list));
 

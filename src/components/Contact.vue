@@ -89,20 +89,21 @@
 
 .btn-primary {
     font-weight: bold;
-    border: 1px solid black;
-    margin:0px 0px 0px 5px;
+    margin:0px 0px 0px 10px;
     padding:14px;
+    border-radius: 10px;
+    background-color: #ccd6fe;
 }
 .btn-secondary {
     font-weight: bold;
-    border: 1px solid black;
     margin:0px 0px 0px 5px;
     padding:14px;
+    border-radius: 10px;
+    background-color: #ccd6fe;
 }
 
 .modal-footer {
     padding: 15px;
 }
-
 
 </style>

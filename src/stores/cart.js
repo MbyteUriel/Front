@@ -5,7 +5,6 @@ export const useCartStore = defineStore({
     state: () => ({
         cart: [],
         lastCart: {
-            // The cart that was bought before the actual cart. Used when buying a new cart
             id: 0,
             totalPrice: 0,
             products: [],
@@ -17,10 +16,10 @@ export const useCartStore = defineStore({
             let totalPrice = 0;
 
             state.cart.forEach((prod) => {
-                totalPrice += prod.price * prod.quantity;
+                totalPrice += prod.precio * prod.quantity;
             });
 
-            return totalPrice.toFixed(2); // toFixed(2) limits the decimals to only 2
+            return totalPrice.toFixed(2); 
         },
     },
     actions: {
@@ -30,21 +29,21 @@ export const useCartStore = defineStore({
         },
         removeFromCart(prodObj) {
             const prodsInCart = this.cart.filter(
-                (product) => product.id !== prodObj.id
+                (product) => product.clave !== prodObj.clave
             );
 
             this.cart = prodsInCart;
         },
         incrementProdQuant(prodObj) {
             this.cart.forEach((prod) => {
-                if (prodObj.id === prod.id) {
+                if (prodObj.clave === prod.clave) {
                     prodObj.quantity++;
                 }
             });
         },
         decreaseProdQuant(prodObj) {
             this.cart.forEach((prod) => {
-                if (prodObj.id === prod.id && prod.quantity > 1) {
+                if (prodObj.clave === prod.clave && prod.quantity > 1) {
                     prodObj.quantity--;
                 }
             });

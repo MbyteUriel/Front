@@ -1,113 +1,133 @@
+<script setup>
+import ProductCard from "@/components/ProductCard.vue";
+import { useCartStore } from "@/stores/cart";
+import { useUserStore } from "@/stores/user";
+import { reactive } from "vue";
+const cartStore = useCartStore();
+const userStore = useUserStore();
+const state = reactive({ isLoading: false });
+function buy() {
+  state.isLoading = true;
+  let prodList = [];
+  cartStore.cart.forEach((prod) => {
+    prodList.push({
+      productClave: prod.clave,
+      quantity: prod.quantity,
+      descripcion: prod.descripcion,
+      categoria: prod.categoria,
+      precio: prod.precio,
+      partida: prod.partida,
+      cantidad: prod.cantidad,
+    });
+  });
+  fetch("https://localhost:8085/api-order/products-orden", {
+    method: "POST",
+    body: JSON.stringify({
+      headers: {
+        "Content-Type": "application/json",
+      },
+      date: Date.now(),
+      products: prodList,
+    })
+  })
+    .then((res) => res.json())
+    .then((cartId) => {
+      cartStore.setLastCart(cartId);
+      alert("Gracias por su compra, cotizacion en proceso");
+      state.isLoading = false;
+    });
+}
+</script>
+
 <template>
-  <TransitionRoot as="template" :show="open">
-    <Dialog as="div" class="relative z-10" @close="open = false">
-      <TransitionChild as="template" enter="ease-in-out duration-500" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in-out duration-500" leave-from="opacity-100" leave-to="opacity-0">
-        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-      </TransitionChild>
+  <PageTitle :title="'Mi carrito (' + cartStore.getCartLength + ')'" />
 
-      <div class="fixed inset-0 overflow-hidden">
-        <div class="absolute inset-0 overflow-hidden">
-          <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
-            <TransitionChild as="template" enter="transform transition ease-in-out duration-500 sm:duration-700" enter-from="translate-x-full" enter-to="translate-x-0" leave="transform transition ease-in-out duration-500 sm:duration-700" leave-from="translate-x-0" leave-to="translate-x-full">
-              <DialogPanel class="pointer-events-auto w-screen max-w-md">
-                <div class="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
-                  <div class="flex-1 overflow-y-auto py-6 px-4 sm:px-6">
-                    <div class="flex items-start justify-between">
-                      <DialogTitle class="text-lg font-medium text-gray-900"> Shopping cart </DialogTitle>
-                      <div class="ml-3 flex h-7 items-center">
-                        <button type="button" class="-m-2 p-2 text-gray-400 hover:text-gray-500" @click="open = false">
-                          <span class="sr-only">Close panel</span>
-                          <XIcon class="h-6 w-6" aria-hidden="true" />
-                        </button>
-                      </div>
-                    </div>
+  <div v-if="!state.isLoading">
+    <h2 id="empty-cart" v-if="cartStore.getCartLength == 0">
+      Tu orden esta vacia :(
+    </h2>
 
-                    <div class="mt-8">
-                      <div class="flow-root">
-                        <ul role="list" class="-my-6 divide-y divide-gray-200">
-                          <li v-for="product in products" :key="product.id" class="flex py-6">
-                            <div class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                              <img :src="product.imageSrc" :alt="product.imageAlt" class="h-full w-full object-cover object-center" />
-                            </div>
-
-                            <div class="ml-4 flex flex-1 flex-col">
-                              <div>
-                                <div class="flex justify-between text-base font-medium text-gray-900">
-                                  <h3>
-                                    <a :href="product.href"> {{ product.name }} </a>
-                                  </h3>
-                                  <p class="ml-4">{{ product.price }}</p>
-                                </div>
-                                <p class="mt-1 text-sm text-gray-500">{{ product.color }}</p>
-                              </div>
-                              <div class="flex flex-1 items-end justify-between text-sm">
-                                <p class="text-gray-500">Qty {{ product.quantity }}</p>
-
-                                <div class="flex">
-                                  <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
-                                </div>
-                              </div>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="border-t border-gray-200 py-6 px-4 sm:px-6">
-                    <div class="flex justify-between text-base font-medium text-gray-900">
-                      <p>Subtotal</p>
-                      <p>$262.00</p>
-                    </div>
-                    <p class="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
-                    <div class="mt-6">
-                      <a href="#" class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">Checkout</a>
-                    </div>
-                    <div class="mt-6 flex justify-center text-center text-sm text-gray-500">
-                      <p>
-                        or <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500" @click="open = false">Continue Shopping<span aria-hidden="true"> &rarr;</span></button>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </DialogPanel>
-            </TransitionChild>
-          </div>
-        </div>
+    <div v-else class="content">
+      <div class="product-list-container">
+        <ProductCard
+          v-for="prod in cartStore.cart"
+          :key="prod.id"
+          :prod="prod"
+          :cartView="true"
+        />
       </div>
-    </Dialog>
-  </TransitionRoot>
+
+      <div class="price-card">
+        <h2>Total price</h2>
+        <h3 class="price">${{ cartStore.getTotalPrice }}</h3>
+        <button @click="buy">Comprar</button>
+      </div>
+    </div>
+  </div>
 </template>
 
-<script setup>
-import { ref } from 'vue'
-import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
-import { XIcon } from '@heroicons/vue/outline'
-
-const products = [
-  {
-    id: 1,
-    name: 'Throwback Hip Bag',
-    href: '#',
-    color: 'Salmon',
-    price: '$90.00',
-    quantity: 1,
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg',
-    imageAlt: 'Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.',
-  },
-  {
-    id: 2,
-    name: 'Medium Stuff Satchel',
-    href: '#',
-    color: 'Blue',
-    price: '$32.00',
-    quantity: 1,
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-02.jpg',
-    imageAlt:
-      'Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.',
-  },
-  // More products...
-]
-
-const open = ref(true)
-</script>
+<style scoped>
+#empty-cart {
+  text-align: center;
+}
+.content {
+  display: flex;
+  flex-direction: column;
+}
+.product-list-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  width: 100%;
+  order: 2;
+}
+.price-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  order: 1;
+  border: 1px solid var(--color-border);
+  width: 100%;
+  max-height: 120px;
+  text-align: center;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  overflow: hidden;
+  padding-top: 10px;
+}
+.price {
+  color: hsla(160, 100%, 37%, 1);
+  font-weight: bold;
+}
+.price-card button {
+  color: white;
+  margin: 0 auto;
+  padding: 6px 1.3rem;
+  font-weight: bold;
+  background-color: hsla(160, 100%, 37%, 1);
+  width: 100%;
+  border: 0;
+  height: 50px;
+}
+.please-login {
+  background-color: #ffc107 !important;
+}
+@media (min-width: 764px) {
+  .content {
+    display: flex;
+    flex-direction: row;
+  }
+  .product-list-container {
+    width: 70%;
+    order: 1;
+  }
+  .price-card {
+    order: 2;
+    width: 20%;
+    padding: 0;
+    max-height: 100px;
+  }
+}
+</style>

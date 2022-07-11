@@ -13,7 +13,7 @@ const cartStore = useCartStore();
 
 <template>
   <div>
-    <p class="prod-quant">Quantity:</p>
+    <p class="prod-quant">Cantidad:</p>
     <button @click="cartStore.incrementProdQuant(prod)">+</button>
     <input type="number" :value="prod.quantity" readonly min="1" max="5" />
     <button @click="cartStore.decreaseProdQuant(prod)">-</button>
@@ -21,7 +21,7 @@ const cartStore = useCartStore();
     <br />
 
     <button @click="cartStore.removeFromCart(prod)" class="remove-btn">
-      Remove
+      Quitar producto
     </button>
   </div>
 </template>
